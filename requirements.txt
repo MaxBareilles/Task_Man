@@ -1,0 +1,6 @@
+nvidia_ml_py3==7.352.0
+nvidia_smi==0.1.3
+Pillow==9.5.0
+psutil==5.9.4
+pyserial==3.5
+pystray==0.19.4
