@@ -3,17 +3,17 @@
 // BEGINNING OF CONFIG VAREIABLES ------------------------------------------------------------
 
 // Pin numbers
-#define BUTTON 1
-#define SDA 8
-#define SCL 9
+#define BUTTON 28
+#define SDA 0
+#define SCL 1
 
 /* Put the pin numbers of pins that should be pulled
  *  high or low into the following arrays if necessary. 
  *  This allows the display to be directly soldered
  *  to the board without the need for any jumpers
  *  for power or ground. */
-const uint8_t highPins[] = {10};
-const uint8_t lowPins[] = {0,11};
+const uint8_t highPins[] = {2};
+const uint8_t lowPins[] = {27,3};
 
 // Timing variables
 #define BOUNCE 20
