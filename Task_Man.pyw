@@ -49,7 +49,7 @@ def setIndex(valueIn):
         error("Index \"" + valueIn + "\"is invalid.", False)
         return True
     except (FileNotFoundError, nvidia_smi.NVMLError_LibraryNotFound):
-        error("nvml.dll not found, check the readme!", False)
+        error("nvml.dll not found:\nCreate a folder NVSMI in C:\\Program Files\\NVIDIA Corporation\\\nThen copy nvml.dll from C:\\Windows\\System32 to C:\\Program Files\\NVIDIA Corporation\\NVSMI", False)
         return True
 
 # Maximum read, write, download, and upload speed
@@ -124,7 +124,7 @@ def loadVars():
         print("Config file found and read!")
         
         # Load the variables.
-        if (setSerial(configData[0][:-1]) or setRate(configData[1][:-1]) or setIndex(configData[2][:-1]) or setRMax(configData[3][:-1]) or setWMax(configData[4][:-1]) or setDMax(configData[5][:-1]) or setUMax(configData[6][:-1]) or setDiskName(configData[7])):
+        if (setSerial(configData[0][:-1]) or setRate(configData[1][:-1]) or setIndex(configData[2][:-1]) or setRMax(configData[3][:-1]) or setWMax(configData[4][:-1]) or setDMax(configData[5][:-1]) or setUMax(configData[6][:-1]) or setDiskName(configData[7][:-1])):
             end()
         else:
             print("\nVariables initialized")
@@ -221,7 +221,7 @@ def loop():
 # This function alerts the user of an error and sometimes ends the program.
 def error(message, endProgram = True):
     print("\n" + message)
-    messagebox.showerror("Task device", message)
+    messagebox.showerror("Task Man", message)
     if endProgram:
         end()
 

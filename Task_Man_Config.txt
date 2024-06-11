@@ -1,8 +1,17 @@
 COM5
-0.1
+0.4
 0
 1200
 1200
 110
 110
 PhysicalDrive1
+
+Line 1: Serial port
+Line 2: Update period (in seconds)
+Line 3: GPU index (usually zero)
+Line 4: Disk read maximum speed (MB/s)  (Maximum speeds are the level that the top of the graph is, any value above this will get clipped to the top.) 
+Line 5: Disk write maximum speed (MB/s)
+Line 6: Download maximum speed (Mbps)
+Line 7: Upload maximum speed (Mbps)
+Line 8: Disk name (Usually PhysicalDrive0) or 'ALL' in order to take the sum of all disk activity. Use psutil.disk_io_counters(perdisk=True) in the IDLE shell to decide on a disk if not using 'ALL'. 

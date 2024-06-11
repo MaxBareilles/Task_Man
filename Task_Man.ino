@@ -1,9 +1,19 @@
 #include <Adafruit_SSD1306.h>
 
+// BEGINNING OF CONFIG VAREIABLES ------------------------------------------------------------
+
 // Pin numbers
 #define BUTTON 1
 #define SDA 8
 #define SCL 9
+
+/* Put the pin numbers of pins that should be pulled
+ *  high or low into the following arrays if necessary. 
+ *  This allows the display to be directly soldered
+ *  to the board without the need for any jumpers
+ *  for power or ground. */
+const uint8_t highPins[] = {10};
+const uint8_t lowPins[] = {0,11};
 
 // Timing variables
 #define BOUNCE 20
@@ -17,7 +27,9 @@
 // The i2c adress of the display
 #define ADDRESS 0x3c
 
-// This means I don't need to retype them it each time
+// END OF CONFIG VAREIABLES ------------------------------------------------------------------
+
+// This means I don't need to retype them each time
 #define cMessage "CPU:"
 #define gMessage "GPU:"
 #define mMessage "MEM:"
@@ -25,13 +37,6 @@
 #define wMessage "WR:"
 #define dMessage "DN:"
 #define uMessage "UP:"
-
-/* Put the pin numbers of pins that should be pulled
- *  high or low into the following arrays. This allows
- *  the display to be directly soldered to the board
- *  without  the need for any jumpers for power or ground. */
-const uint8_t highPins[] = {10};
-const uint8_t lowPins[] = {0, 11};
 
 // Display object
 Adafruit_SSD1306 oled(WIDTH, HEIGHT, &Wire, -1);
@@ -43,6 +48,13 @@ char inputBuffer[100];
 uint8_t bufferIndex = 0;
 char intCode;
 
+// These hold the maximum values which are used for graphing.
+// These values are default, the python program updates them on startup.
+uint16_t rMax = 3000;
+uint16_t wMax = 3000;
+uint16_t dMax = 1000;
+uint16_t uMax = 1000;
+
 // This holds the data.
 uint16_t C[WIDTH / 2];//CPU
 uint16_t G[WIDTH / 2];//GPU
@@ -51,13 +63,6 @@ uint16_t R[WIDTH / 2];//Read
 uint16_t W[WIDTH / 2];//Write
 uint16_t D[WIDTH / 2];//Download
 uint16_t U[WIDTH / 2];//Upload
-
-// These hold the maximum valuse which are used for graphing.
-// These values are default, the python program can update them.
-uint16_t rMax = 3000;
-uint16_t wMax = 3000;
-uint16_t dMax = 1000;
-uint16_t uMax = 1000;
 
 // This is used to convert numbers to strings
 char conversionBuffer[10];
@@ -82,6 +87,7 @@ int8_t displayMode = 0;
 
 
 void setup() {
+
 
   // Comment out if not using a pico
   Wire.setSDA(SDA);
@@ -154,7 +160,7 @@ void loop() {
         // (it would be weird to press the button
         // to turn it on, only to have it turn off again),
         // and trigger an event.
-        clearData();
+        clearData(false);
         off = false;
         ignoreHold = true;
         event();
@@ -219,7 +225,7 @@ void loop() {
 // It is called when the user does anything or when data is received from the computer.
 void event() {
   if (timedOut) {
-    clearData();
+    clearData(true);
   }
   timedOut = false;
   timeOfEvent = millis();
@@ -228,8 +234,9 @@ void event() {
 
 
 // This function clears the data and is called when the device turns "on" or brought out of timeout.
-void clearData() {
-  for (uint16_t i = 0; i < WIDTH / 2; i++) {
+void clearData(bool preserveIndexZero) {
+  // If preserveIndexZero is true, it will numerically turn into '1' skipping over the most recent piece of data.
+  for (uint16_t i = preserveIndexZero; i < WIDTH / 2; i++) {
     C[i] = 0;
     G[i] = 0;
     M[i] = 0;
